@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="lib/bootstrap-4.0.0-dist/css/bootstrap.min.css">
+    <style>
+        .logo {
+            width: 60%;
+            height: 500px;
+            margin: auto;
+        }
+
+        .name {
+            text-align: center;
+            font-size: 66px;
+            text-shadow: 3px 5px grey, 1px 1px #333;
+        }
+
+        .img {
+            width: 48%;
+            height: 53%;
+            margin: auto;
+            margin-top: 38px;
+        }
+
+        .img img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .search {
+            width: 60%;
+            height: 100px;
+            margin: auto;
+        }
+
+        #search_value {
+            width: 80%;
+            height: 50px;
+            box-shadow: 3px 5px grey, 1px 1px #333;
+        }
+
+        .search button {
+            width: 18%;
+            height: 50px;
+            margin-left: 6px;
+            box-shadow: 3px 5px grey, 1px 1px #333;
+        }
+
+         @keyframes rotate {
+            0% { transform:rotateY(0deg);}
+            25% { transform:rotateY(180deg);}
+            50% { transform:rotateY(0deg);}
+            75% { transform:rotateY(180deg);}
+            100% { transform:rotateY(0deg);}
+        }
+
+        .logo_rotate {
+            animation: rotate 10s infinite;
+            animation-fill-mode: forwards;
+            animation-timing-function: linear;
+            /*  当动画结束时，让<div>元素保留上一个关键帧的样式值 */
+        }
+
+         .result_success {
+            width: 60%;
+            margin: auto;
+        }
+
+        .result_faile{
+            width: 60%;
+            margin: auto;
+        }
+
+        .add_banner{
+            width: 60%;
+            margin: auto;
+        }
+
+        .add_banner input{
+            width: 80%;
+            height: 50px;
+            box-shadow: 3px 5px grey, 1px 1px #333;
+        }
+
+        .add_banner button{
+            width: 18%;
+            height: 50px;
+            margin-left: 6px;
+            box-shadow: 3px 5px grey, 1px 1px #333;
+        }
+
+        #search_banner{
+            font-size: 40px;
+            border-bottom: 1px solid black;
+        }
+
+        p{
+            text-indent:2em;
+            font-size: 20px;
+        }
+
+        .hide{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contenner">
+        <div class="logo">
+            <div class="name">SUPER WIKI</div>
+            <div class="img logo_rotate">
+                <img src="img/logo.png" alt="">
+            </div>
+        </div>
+        <div class="search">
+            <input id="search_value" type="text">
+            <button id=search>search</button>
+        </div>
+
+        <div class="result_success hide">
+            <div id=search_banner>湖人：</div>
+            <p id=search_result> 总冠军!!! </p>
+        </div>
+
+        <div class="result_faile ">
+            未搜索到相关信息，是否为 <i>asd</i> <button id="add">添加</button>信息？        
+        </div>
+
+        <div class="add_banner hide">
+            <input type="text" id="add_value" placeholder="value">
+            <button class="push">提交</button>
+            </div>
+    </div>
+    <script src=lib/jquery-3.3.1.min.js></script>
+    <script src=lib/bootstrap-4.0.0-dist/js/bootstrap.min.js></script>
+    <script>
+    $("#search").click(function(){
+        $(".result_success").removeClass("hide");
+
+        // $("#search_value").val() 搜索框内的值
+    })
+    $("#add").click(function(){
+        $(".result_faile").addClass("hide");
+        $(".add_banner").removeClass("hide");
+    })
+</script>
+</body>
+
+</html>
