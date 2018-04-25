@@ -128,7 +128,7 @@
             <p id=search_result> 总冠军!!! </p>
         </div>
 
-        <div class="result_faile ">
+        <div class="result_faile hide">
             未搜索到相关信息，是否为 <i>asd</i> <button id="add">添加</button>信息？        
         </div>
 
@@ -140,11 +140,14 @@
     <script src=lib/jquery-3.3.1.min.js></script>
     <script src=lib/bootstrap-4.0.0-dist/js/bootstrap.min.js></script>
     <script>
+
+        // 搜索功能
     $("#search").click(function(){
         $(".result_success").removeClass("hide");
 
         // $("#search_value").val() 搜索框内的值
     })
+    // 添加信息功能
     $("#add").click(function(){
         $(".result_faile").addClass("hide");
         $(".add_banner").removeClass("hide");
