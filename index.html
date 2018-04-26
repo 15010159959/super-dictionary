@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+
     <title>Document</title>
     <link rel="stylesheet" href="lib/bootstrap-4.0.0-dist/css/bootstrap.min.css">
     <style>
@@ -107,6 +108,11 @@
         .hide{
             display: none;
         }
+
+        .contenner{
+            background: url("img/bg.jpg");
+            height: 900px;
+        }
     </style>
 </head>
 
@@ -144,7 +150,6 @@
         // 搜索功能
     $("#search").click(function(){
         $(".result_success").removeClass("hide");
-
         // $("#search_value").val() 搜索框内的值
     })
     // 添加信息功能
