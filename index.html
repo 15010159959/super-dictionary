@@ -135,28 +135,106 @@
         </div>
 
         <div class="result_faile hide">
-            未搜索到相关信息，是否为 <i>asd</i> <button id="add">添加</button>信息？        
+            未搜索到相关信息，是否为 "<i id="result_faile_add">asd</i>" <button id="add">添加</button>信息？
         </div>
 
         <div class="add_banner hide">
             <input type="text" id="add_value" placeholder="value">
-            <button class="push">提交</button>
+            <button id="push">提交</button>
             </div>
     </div>
     <script src=lib/jquery-3.3.1.min.js></script>
     <script src=lib/bootstrap-4.0.0-dist/js/bootstrap.min.js></script>
     <script>
 
+    var dappAddress = "n1sFGCeWaFU1ZK4sCDtVETd8nntuMmJVsJm"
+
         // 搜索功能
     $("#search").click(function(){
-        $(".result_success").removeClass("hide");
         // $("#search_value").val() 搜索框内的值
+
+        console.log("********* call smart contract by \"call\" *****************")
+        var func = "get"
+        var args = "[\"" + $("#search_value").val() + "\"]"
+
+        window.postMessage({
+            "target": "contentscript",
+            "data":{
+                //"from": from,
+                "to" : dappAddress,
+                "value" : "0",
+                "contract" : {
+                    "function" : func,
+                    "args" : args
+                }
+            },
+            "method": "neb_call"
+        }, "*");
+
     })
+
     // 添加信息功能
-    $("#add").click(function(){
+    $("#add").click(function() {
         $(".result_faile").addClass("hide");
         $(".add_banner").removeClass("hide");
+
+        //$("#add_value").val($("#search_value").val())
     })
+
+    $("#push").click(function() {
+        console.log("********* call smart contract \"sendTransaction\" *****************")
+        var func = "save"
+        var args = "[\"" + $("#search_value").val() + "\",\"" + $("#add_value").val() + "\"]"
+
+        window.postMessage({
+            "target": "contentscript",
+            "data":{
+                //"from": from,
+                "to" : dappAddress,
+                "value" : "0",
+                "contract" : {
+                    "function" : func,
+                    "args" : args
+                }
+            },
+            "method": "neb_sendTransaction"
+        }, "*");
+    })
+
+
+    // listen message from contentscript
+    window.addEventListener('message', function(e) {
+        // e.detail contains the transferred data (can
+        console.log("recived by page:" + e + ", e.data:"+ JSON.stringify(e.data));
+        if (!!e.data.data.account){
+            //document.getElementById("accountAddress").innerHTML= "Account address: " + e.data.data.account;
+        }
+        if (!!e.data.data.receipt){
+            //document.getElementById("txResult").innerHTML = "Transaction Receipt\n" +  JSON.stringify(e.data.data.receipt,null,'\t');
+        }
+        if (!!e.data.data.neb_call){
+            var resp = e.data.data.neb_call
+            console.log("return of rpc call: " + JSON.stringify(resp))
+
+            if ( resp.execute_err === ""){
+                if(resp.result === "null"){
+                    $(".result_success").addClass("hide");
+                    $("#result_faile_add").text($("#search_value").val())
+                    $(".result_faile").removeClass("hide");
+                } else {
+                    result = JSON.parse(resp.result)
+                    $(".add_banner").addClass("hide");
+                    $("#search_banner").text($("#search_value").val())
+                    $("#search_result").text(result.value)
+                    $(".result_success").removeClass("hide");
+                }
+            } else {
+
+            }
+        }
+    });
+
+
 </script>
 </body>
 

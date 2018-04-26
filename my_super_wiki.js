@@ -5,7 +5,7 @@ var WikiItem = function(text) {
 		var obj = JSON.parse(text);
 		this.key = obj.key;
 		this.value = obj.value;
-		this.author = obj.text;
+		this.author = obj.author;
 	} else {
 	    this.key = "";
 	    this.author = "";
