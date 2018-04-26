@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
 
-    <title>Document</title>
+    <title>Super Wiki</title>
     <link rel="stylesheet" href="lib/bootstrap-4.0.0-dist/css/bootstrap.min.css">
     <style>
         .logo {
@@ -138,8 +138,8 @@
         </div>
 
         <div class="result_success hide">
-            <div id=search_banner>湖人：</div>
-            <p id=search_result> 总冠军!!! </p>
+            <div id=search_banner></div>
+            <p id=search_result> wait for content </p>
             <div class="author">
                 <i><p> From:</p> <p id=search_result_author> dasdajkajksdhjasdkjahdkjad</p></i> 
             </div>
@@ -224,19 +224,25 @@
             //document.getElementById("txResult").innerHTML = "Transaction Receipt\n" +  JSON.stringify(e.data.data.receipt,null,'\t');
         }
         if (!!e.data.data.neb_call){
-            var resp = e.data.data.neb_call
-            console.log("return of rpc call: " + JSON.stringify(resp))
+            var result = e.data.data.neb_call.result
+            console.log("return of rpc call: " + JSON.stringify(result))
 
-            if ( resp.execute_err === ""){
-                if(resp.result === "null"){
-                    $(".add_banner").addClass("hide");
-                    $(".result_success").addClass("hide");
+            if (result === 'null'){
+                $(".add_banner").addClass("hide");
+                $(".result_success").addClass("hide");
 
-                    $("#result_faile_add").text($("#search_value").val())
+                $("#result_faile_add").text($("#search_value").val())
 
-                    $(".result_faile").removeClass("hide");
-                } else {
-                    result = JSON.parse(resp.result)
+                $(".result_faile").removeClass("hide");
+            } else{
+
+                try{
+                    result = JSON.parse(e.data.data.neb_call.result)
+                }catch (err){
+
+                }
+
+                if (!!result.key){
                     $(".add_banner").addClass("hide");
                     $(".result_faile").addClass("hide");
 
@@ -245,10 +251,19 @@
                     $("#search_result_author").text(result.author)
 
                     $(".result_success").removeClass("hide");
+                } else {
+                    $(".add_banner").addClass("hide");
+                    $(".result_faile").addClass("hide");
+
+                    $("#search_banner").text($("#search_value").val())
+                    $("#search_result").text(result)
+                    $("#search_result_author").text("")
+
+                    $(".result_success").removeClass("hide");
                 }
-            } else {
 
             }
+
         }
     });
 
