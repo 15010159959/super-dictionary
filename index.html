@@ -119,6 +119,7 @@
         }
         .author p{
             display: inline-block;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -145,12 +146,12 @@
         </div>
 
         <div class="result_faile hide">
-            未搜索到相关信息，是否为 "<i id="result_faile_add">asd</i>" <button id="add">添加</button>信息？
+            Failed to find related information. Do you want to <button id="add">add</button> infromation for "<i id="result_faile_add">asd</i>"?
         </div>
 
         <div class="add_banner hide">
-            <input type="text" id="add_value" placeholder="value">
-            <button id="push">提交</button>
+            <input type="text" id="add_value" placeholder="input contents for your keyword">
+            <button id="push">submit</button>
             </div>
     </div>
     <script src=lib/jquery-3.3.1.min.js></script>
