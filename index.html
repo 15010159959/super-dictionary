@@ -132,6 +132,7 @@
         <div class="result_success hide">
             <div id=search_banner>湖人：</div>
             <p id=search_result> 总冠军!!! </p>
+            <p id=search_result_author>  </p>
         </div>
 
         <div class="result_faile hide">
@@ -147,7 +148,7 @@
     <script src=lib/bootstrap-4.0.0-dist/js/bootstrap.min.js></script>
     <script>
 
-    var dappAddress = "n1sFGCeWaFU1ZK4sCDtVETd8nntuMmJVsJm"
+    var dappAddress = "n1oXdmwuo5jJRExnZR5rbceMEyzRsPeALgm"
 
         // 搜索功能
     $("#search").click(function(){
@@ -178,7 +179,7 @@
         $(".result_faile").addClass("hide");
         $(".add_banner").removeClass("hide");
 
-        //$("#add_value").val($("#search_value").val())
+        $("#add_value").val("")
     })
 
     $("#push").click(function() {
@@ -218,14 +219,21 @@
 
             if ( resp.execute_err === ""){
                 if(resp.result === "null"){
+                    $(".add_banner").addClass("hide");
                     $(".result_success").addClass("hide");
+
                     $("#result_faile_add").text($("#search_value").val())
+
                     $(".result_faile").removeClass("hide");
                 } else {
                     result = JSON.parse(resp.result)
                     $(".add_banner").addClass("hide");
+                    $(".result_faile").addClass("hide");
+
                     $("#search_banner").text($("#search_value").val())
                     $("#search_result").text(result.value)
+                    $("#search_result_author").text(result.author)
+
                     $(".result_success").removeClass("hide");
                 }
             } else {
