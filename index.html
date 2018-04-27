@@ -39,6 +39,13 @@
             margin: auto;
         }
 
+        .noExtension {
+            width: 60%;
+            height: 100px;
+            margin: auto;
+            font-size: 23px;
+        }
+
         #search_value {
             width: 80%;
             height: 50px;
@@ -134,6 +141,9 @@
                 <img src="img/logo.png" alt="">
             </div>
         </div>
+        <div class="noExtension hide" id="noExtension">
+            NOTE: Please install <a target="_blank" href="https://github.com/ChengOrangeJu/WebExtensionWallet">WebExtensionWallet</a>  to use SUPER DICTIONARY
+        </div>
         <div class="search">
             <input id="search_value" type="text">
             <button id=search>search</button>
@@ -160,7 +170,29 @@
     <script src=lib/bootstrap-4.0.0-dist/js/bootstrap.min.js></script>
     <script>
 
-    var dappAddress = "n1oXdmwuo5jJRExnZR5rbceMEyzRsPeALgm"
+        document.addEventListener("DOMContentLoaded", function() {
+            $("#search_value").attr("disabled",true)
+            $("#search").attr("disabled",true)
+
+            console.log("web page loaded...")
+            setTimeout(checkNebpay(),10000);
+        });
+
+        function checkNebpay() {
+            console.log("check nebpay")
+            try{
+                var NebPay = require("nebpay");
+
+                $("#search_value").attr("disabled",false)
+
+            }catch(e){
+                //alert ("Extension wallet is not installed, please install it first.")
+                $("#noExtension").removeClass("hide")
+            }
+        }
+
+    var dappAddress = "n1oXdmwuo5jJRExnZR5rbceMEyzRsPeALgm";
+
 
         // 搜索功能
     $("#search").click(function(){
