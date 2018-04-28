@@ -1,6 +1,6 @@
 "use strict";
 
-var WikiItem = function(text) {
+var DictItem = function(text) {
 	if (text) {
 		var obj = JSON.parse(text);
 		this.key = obj.key;
@@ -13,16 +13,16 @@ var WikiItem = function(text) {
 	}
 };
 
-WikiItem.prototype = {
+DictItem.prototype = {
 	toString: function () {
 		return JSON.stringify(this);
 	}
 };
 
-var SuperWiki = function () {
+var SuperDictionary = function () {
     LocalContractStorage.defineMapProperty(this, "repo", {
         parse: function (text) {
-            return new WikiItem(text);
+            return new DictItem(text);
         },
         stringify: function (o) {
             return o.toString();
@@ -30,35 +30,34 @@ var SuperWiki = function () {
     });
 };
 
-SuperWiki.prototype = {
+SuperDictionary.prototype = {
     init: function () {
         // todo
     },
 
     save: function (key, value) {
-        console.log("jcjc save ", key, value);
 
         key = key.trim();
         value = value.trim();
         if (key === "" || value === ""){
             throw new Error("empty key / value");
         }
-        if (value.length > 128 || key.length > 128){
+        if (value.length > 64 || key.length > 64){
             throw new Error("key / value exceed limit length")
         }
 
         var from = Blockchain.transaction.from;
-        var wikiItem = this.repo.get(key);
-        if (wikiItem){
-            throw new Error("value has been taken");
+        var dictItem = this.repo.get(key);
+        if (dictItem){
+            throw new Error("value has been occupied");
         }
 
-        wikiItem = new WikiItem();
-        wikiItem.author = from;
-        wikiItem.key = key;
-        wikiItem.value = value;
+        dictItem = new DictItem();
+        dictItem.author = from;
+        dictItem.key = key;
+        dictItem.value = value;
 
-        this.repo.put(key, wikiItem);
+        this.repo.put(key, dictItem);
     },
 
     get: function (key) {
@@ -69,4 +68,4 @@ SuperWiki.prototype = {
         return this.repo.get(key);
     }
 };
-module.exports = SuperWiki;
+module.exports = SuperDictionary;

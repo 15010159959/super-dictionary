@@ -132,7 +132,7 @@ function deployContract(testInput, done) {
         fromState = state;
         console.log("from state: " + JSON.stringify(fromState));
     }).then(function(){
-        var filepath = "../nf/nvm/test/my_super_wiki." + testInput.contractType;
+        var filepath = "../nf/nvm/test/super_dictionary." + testInput.contractType;
         console.log("deploying contract: " + filepath);
         var bankvault = FS.readFileSync(filepath, "utf-8");
         var contract = {
