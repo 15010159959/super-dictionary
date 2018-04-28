@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
 
-    <title>Super Wiki</title>
+    <title>Super Dictionary</title>
     <link rel="stylesheet" href="lib/bootstrap-4.0.0-dist/css/bootstrap.min.css">
     <style>
         .logo {
@@ -175,7 +175,7 @@
             $("#search").attr("disabled",true)
 
             console.log("web page loaded...")
-            setTimeout(checkNebpay(),10000);
+            setTimeout(checkNebpay,100);
         });
 
         function checkNebpay() {
@@ -206,7 +206,6 @@
         window.postMessage({
             "target": "contentscript",
             "data":{
-                //"from": from,
                 "to" : dappAddress,
                 "value" : "0",
                 "contract" : {
@@ -235,7 +234,6 @@
         window.postMessage({
             "target": "contentscript",
             "data":{
-                //"from": from,
                 "to" : dappAddress,
                 "value" : "0",
                 "contract" : {
@@ -250,7 +248,7 @@
 
     // listen message from contentscript
     window.addEventListener('message', function(e) {
-        // e.detail contains the transferred data (can
+        // e.detail contains the transferred data
         console.log("recived by page:" + e + ", e.data:"+ JSON.stringify(e.data));
         if (!!e.data.data.account){
             //document.getElementById("accountAddress").innerHTML= "Account address: " + e.data.data.account;
