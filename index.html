@@ -167,58 +167,86 @@
             </div>
     </div>
     <script src=lib/jquery-3.3.1.min.js></script>
+    <script src=lib/nebPay.js></script>
     <script src=lib/bootstrap-4.0.0-dist/js/bootstrap.min.js></script>
     <script>
+        var NebPay = require("nebpay");     //https://github.com/nebulasio/nebPay
+        var nebPay = new NebPay();
 
-        document.addEventListener("DOMContentLoaded", function() {
-            $("#search_value").attr("disabled",true)
-            $("#search").attr("disabled",true)
+        $("#search_value").attr("disabled",true)
+        $("#search").attr("disabled",true)
 
-            console.log("web page loaded...")
-            setTimeout(checkNebpay,100);
-        });
 
-        function checkNebpay() {
-            console.log("check nebpay")
-            try{
-                var NebPay = require("nebpay");
-
-                $("#search_value").attr("disabled",false)
-                $("#search").attr("disabled",false)
-
-            }catch(e){
-                //alert ("Extension wallet is not installed, please install it first.")
-                $("#noExtension").removeClass("hide")
-            }
+        //to check if the extension is installed
+        //if the extension is installed, var "webExtensionWallet" will be injected in to web page
+        if(typeof(webExtensionWallet) === "undefined"){
+            //alert ("Extension wallet is not installed, please install it first.")
+            $("#noExtension").removeClass("hide")
+        }else{
+            $("#search_value").attr("disabled",false)
+            $("#search").attr("disabled",false)
         }
 
-    var dappAddress = "n1oXdmwuo5jJRExnZR5rbceMEyzRsPeALgm";
+        var dappAddress = "n1oXdmwuo5jJRExnZR5rbceMEyzRsPeALgm";
 
-
-        // 搜索功能
+        // 搜索功能: 查找Super-Dictionary 中有没有该词条
     $("#search").click(function(){
         // $("#search_value").val() 搜索框内的值
 
-        console.log("********* call smart contract by \"call\" *****************")
-        var func = "get"
-        var args = "[\"" + $("#search_value").val() + "\"]"
-
-        window.postMessage({
-            "target": "contentscript",
-            "data":{
-                "to" : dappAddress,
-                "value" : "0",
-                "contract" : {
-                    "function" : func,
-                    "args" : args
-                }
-            },
-            "method": "neb_call"
-        }, "*");
-
+        var to = dappAddress;
+        var value = "0";
+        var callFunction = "get";
+        var callArgs = "[\"" + $("#search_value").val() + "\"]"; //in the form of ["args"]
+        nebPay.simulateCall(to, value, callFunction, callArgs, {    //使用nebpay的simulateCall接口去执行get查询, 模拟执行.不发送交易,不上链
+            callback: cbSearch      //指定回调函数
+        });
     })
 
-    // 添加信息功能
+    //return of search,
+    function cbSearch(resp) {
+        var result = resp.result
+        console.log("return of rpc call: " + JSON.stringify(result))
+
+        if (result === 'null'){
+            $(".add_banner").addClass("hide");
+            $(".result_success").addClass("hide");
+
+            $("#result_faile_add").text($("#search_value").val())
+
+            $(".result_faile").removeClass("hide");
+        } else{
+            //if result is not null, then it should be "return value" or "error message"
+            try{
+                result = JSON.parse(result)
+            }catch (err){
+                //result is the error message
+            }
+
+            if (!!result.key){      //"return value"
+                $(".add_banner").addClass("hide");
+                $(".result_faile").addClass("hide");
+
+                $("#search_banner").text($("#search_value").val())
+                $("#search_result").text(result.value)
+                $("#search_result_author").text(result.author)
+
+                $(".result_success").removeClass("hide");
+            } else {        //"error message"
+                $(".add_banner").addClass("hide");
+                $(".result_faile").addClass("hide");
+
+                $("#search_banner").text($("#search_value").val())
+                $("#search_result").text(result)
+                $("#search_result_author").text("")
+
+                $(".result_success").removeClass("hide");
+            }
+
+        }
+
+    }
+
+    // 添加信息功能: 像super-dictionary 中添加词条
     $("#add").click(function() {
         $(".result_faile").addClass("hide");
         $(".add_banner").removeClass("hide");
@@ -227,78 +255,20 @@
     })
 
     $("#push").click(function() {
-        console.log("********* call smart contract \"sendTransaction\" *****************")
-        var func = "save"
-        var args = "[\"" + $("#search_value").val() + "\",\"" + $("#add_value").val() + "\"]"
 
-        window.postMessage({
-            "target": "contentscript",
-            "data":{
-                "to" : dappAddress,
-                "value" : "0",
-                "contract" : {
-                    "function" : func,
-                    "args" : args
-                }
-            },
-            "method": "neb_sendTransaction"
-        }, "*");
-    })
+        var to = dappAddress;
+        var value = "0";
+        var callFunction = "save"
+        var callArgs = "[\"" + $("#search_value").val() + "\",\"" + $("#add_value").val() + "\"]"
 
-
-    // listen message from contentscript
-    window.addEventListener('message', function(e) {
-        // e.detail contains the transferred data
-        console.log("recived by page:" + e + ", e.data:"+ JSON.stringify(e.data));
-        if (!!e.data.data.account){
-            //document.getElementById("accountAddress").innerHTML= "Account address: " + e.data.data.account;
-        }
-        if (!!e.data.data.receipt){
-            //document.getElementById("txResult").innerHTML = "Transaction Receipt\n" +  JSON.stringify(e.data.data.receipt,null,'\t');
-        }
-        if (!!e.data.data.neb_call){
-            var result = e.data.data.neb_call.result
-            console.log("return of rpc call: " + JSON.stringify(result))
-
-            if (result === 'null'){
-                $(".add_banner").addClass("hide");
-                $(".result_success").addClass("hide");
-
-                $("#result_faile_add").text($("#search_value").val())
-
-                $(".result_faile").removeClass("hide");
-            } else{
-
-                try{
-                    result = JSON.parse(e.data.data.neb_call.result)
-                }catch (err){
-
-                }
-
-                if (!!result.key){
-                    $(".add_banner").addClass("hide");
-                    $(".result_faile").addClass("hide");
-
-                    $("#search_banner").text($("#search_value").val())
-                    $("#search_result").text(result.value)
-                    $("#search_result_author").text(result.author)
-
-                    $(".result_success").removeClass("hide");
-                } else {
-                    $(".add_banner").addClass("hide");
-                    $(".result_faile").addClass("hide");
-
-                    $("#search_banner").text($("#search_value").val())
-                    $("#search_result").text(result)
-                    $("#search_result_author").text("")
-
-                    $(".result_success").removeClass("hide");
-                }
-
-            }
-
-        }
+        nebPay.call(to, value, callFunction, callArgs, {    //使用nebpay的call接口去调用合约,
+            callback: cbPush
+        });
     });
+
+    function cbPush(resp) {
+        console.log("response of push: " + resp)
+    }
 
 
 </script>
