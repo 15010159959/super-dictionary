@@ -198,7 +198,7 @@
         var callFunction = "get";
         var callArgs = "[\"" + $("#search_value").val() + "\"]"; //in the form of ["args"]
         nebPay.simulateCall(to, value, callFunction, callArgs, {    //使用nebpay的simulateCall接口去执行get查询, 模拟执行.不发送交易,不上链
-            callback: cbSearch      //指定回调函数
+            listener: cbSearch      //指定回调函数
         });
     })
 
@@ -262,7 +262,7 @@
         var callArgs = "[\"" + $("#search_value").val() + "\",\"" + $("#add_value").val() + "\"]"
 
         nebPay.call(to, value, callFunction, callArgs, {    //使用nebpay的call接口去调用合约,
-            callback: cbPush
+            listener: cbPush
         });
     });
 
