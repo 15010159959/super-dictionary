@@ -169,42 +169,60 @@
     <script src=lib/jquery-3.3.1.min.js></script>
     <script src=lib/nebPay.js></script>
     <script src=lib/bootstrap-4.0.0-dist/js/bootstrap.min.js></script>
+    <script src=lib/nebulas.js></script>
     <script>
-        var NebPay = require("nebpay");     //https://github.com/nebulasio/nebPay
-        var nebPay = new NebPay();
 
-        $("#search_value").attr("disabled",true)
-        $("#search").attr("disabled",true)
+        "use strict";
 
 
-        //to check if the extension is installed
-        //if the extension is installed, var "webExtensionWallet" will be injected in to web page
-        if(typeof(webExtensionWallet) === "undefined"){
-            //alert ("Extension wallet is not installed, please install it first.")
-            $("#noExtension").removeClass("hide")
-        }else{
-            $("#search_value").attr("disabled",false)
-            $("#search").attr("disabled",false)
-        }
+        // $("#search_value").attr("disabled",true)
+        // $("#search").attr("disabled",true)
+        // //to check if the extension is installed
+        // //if the extension is installed, var "webExtensionWallet" will be injected in to web page
+        // if(typeof(webExtensionWallet) === "undefined"){
+        //     //alert ("Extension wallet is not installed, please install it first.")
+        //     $("#noExtension").removeClass("hide")
+        // }else{
+        //     $("#search_value").attr("disabled",false)
+        //     $("#search").attr("disabled",false)
+        // }
 
         var dappAddress = "n1oXdmwuo5jJRExnZR5rbceMEyzRsPeALgm";
 
-        // 搜索功能: 查找Super-Dictionary 中有没有该词条
-    $("#search").click(function(){
-        // $("#search_value").val() 搜索框内的值
+        var nebulas = require("nebulas"),
+            Account = nebulas.Account,
+            neb = new nebulas.Neb();
+        neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));
 
-        var to = dappAddress;
-        var value = "0";
-        var callFunction = "get";
-        var callArgs = "[\"" + $("#search_value").val() + "\"]"; //in the form of ["args"]
-        nebPay.simulateCall(to, value, callFunction, callArgs, {    //使用nebpay的simulateCall接口去执行get查询, 模拟执行.不发送交易,不上链
-            listener: cbSearch      //指定回调函数
-        });
-    })
+        // 搜索功能: 查找Super-Dictionary 中有没有该词条
+        $("#search").click(function(){
+            // $("#search_value").val() 搜索框内的值
+
+            var from = Account.NewAccount().getAddressString();
+
+            var value = "0";
+            var nonce = "0"
+            var gas_price = "1000000"
+            var gas_limit = "2000000"
+            var callFunction = "get";
+            var callArgs = "[\"" + $("#search_value").val() + "\"]"; //in the form of ["args"]
+            var contract = {
+                "function": callFunction,
+                "args": callArgs
+            }
+
+            neb.api.call(from,dappAddress,value,nonce,gas_price,gas_limit,contract).then(function (resp) {
+                cbSearch(resp)
+            }).catch(function (err) {
+                //cbSearch(err)
+                console.log("error:" + err.message)
+            })
+
+        })
 
     //return of search,
     function cbSearch(resp) {
-        var result = resp.result
+        var result = resp.result    ////resp is an object, resp.result is a JSON string
         console.log("return of rpc call: " + JSON.stringify(result))
 
         if (result === 'null'){
@@ -254,6 +272,10 @@
         $("#add_value").val("")
     })
 
+    var NebPay = require("nebpay");     //https://github.com/nebulasio/nebPay
+    var nebPay = new NebPay();
+    var serialNumber
+
     $("#push").click(function() {
 
         var to = dappAddress;
@@ -261,13 +283,34 @@
         var callFunction = "save"
         var callArgs = "[\"" + $("#search_value").val() + "\",\"" + $("#add_value").val() + "\"]"
 
-        nebPay.call(to, value, callFunction, callArgs, {    //使用nebpay的call接口去调用合约,
-            listener: cbPush
+        serialNumber = nebPay.call(to, value, callFunction, callArgs, {    //使用nebpay的call接口去调用合约,
+            listener: cbPush        //设置listener, 处理交易返回信息
         });
+
+        intervalQuery = setInterval(function () {
+            funcIntervalQuery();
+        }, 5000);
     });
 
+    var intervalQuery
+
+    function funcIntervalQuery() {
+        nebPay.queryPayInfo(serialNumber)   //search transaction result from server (result upload to server by app)
+            .then(function (resp) {
+                console.log("tx result: " + resp)   //resp is a JSON string
+                var respObject = JSON.parse(resp)
+                if(respObject.code === 0){
+                    alert(`set ${$("#search_value").val()} succeed!`)
+                    clearInterval(intervalQuery)
+                }
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+    }
+
     function cbPush(resp) {
-        console.log("response of push: " + resp)
+        console.log("response of push: " + JSON.stringify(resp))
     }
 
 
