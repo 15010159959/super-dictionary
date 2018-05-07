@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width,initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no">
+    <meta name="x5-fullscreen" content="true">
+    <meta name="full-screen" content="yes">
 
     <title>Super Dictionary</title>
     <link rel="stylesheet" href="lib/bootstrap-4.0.0-dist/css/bootstrap.min.css">
@@ -34,7 +36,7 @@
         }
 
         .search {
-            width: 60%;
+            width: 80%;
             height: 100px;
             margin: auto;
         }
@@ -59,7 +61,7 @@
             box-shadow: 3px 5px grey, 1px 1px #333;
         }
 
-         @keyframes rotate {
+        @keyframes rotate {
             0% { transform:rotateY(0deg);}
             25% { transform:rotateY(180deg);}
             50% { transform:rotateY(0deg);}
@@ -68,26 +70,28 @@
         }
 
         .logo_rotate {
-			/*
+            /*
             animation: rotate 10s infinite;
             animation-fill-mode: forwards;
             animation-timing-function: linear;
-				*/
+                */
             /*  当动画结束时，让<div>元素保留上一个关键帧的样式值 */
         }
 
-         .result_success {
+        .result_success {
             width: 60%;
             margin: auto;
+            font-size: 22px
         }
 
         .result_faile{
             width: 60%;
             margin: auto;
+            font-size: 22px
         }
 
         .add_banner{
-            width: 60%;
+            width: 80%;
             margin: auto;
         }
 
@@ -105,13 +109,13 @@
         }
 
         #search_banner{
-            font-size: 40px;
+            font-size: 50px;
             border-bottom: 1px solid black;
         }
 
         p{
             text-indent:2em;
-            font-size: 20px;
+            font-size: 30px;
         }
 
         .hide{
@@ -120,7 +124,7 @@
 
         .contenner{
             background: url("img/bg.jpg");
-            height: 900px;
+            height: 1500px;
         }
 
         .author{
@@ -128,97 +132,97 @@
         }
         .author p{
             display: inline-block;
-            font-size: 14px;
+            font-size: 18px;
         }
     </style>
 </head>
 
 <body>
-    <div class="contenner">
-        <div class="logo">
-            <div class="name">SUPER DICTIONARY</div>
-            <div class="img logo_rotate">
-                <img src="img/logo.png" alt="">
-            </div>
+<div class="contenner">
+    <div class="logo">
+        <div class="name">SUPER DICTIONARY</div>
+        <div class="img logo_rotate">
+            <img src="img/logo.png" alt="">
         </div>
-        <div class="noExtension hide" id="noExtension">
-            NOTE: Please install <a target="_blank" href="https://github.com/ChengOrangeJu/WebExtensionWallet">WebExtensionWallet</a>  to use SUPER DICTIONARY
-        </div>
-        <div class="search">
-            <input id="search_value" type="text">
-            <button id=search>search</button>
-        </div>
-
-        <div class="result_success hide">
-            <div id=search_banner></div>
-            <p id=search_result> wait for content </p>
-            <div class="author">
-                <i><p> Author:</p> <p id=search_result_author> dasdajkajksdhjasdkjahdkjad</p></i>
-            </div>
-        </div>
-
-        <div class="result_faile hide">
-            Failed to find related information. Do you want to <button id="add">add</button> infromation for "<i id="result_faile_add">asd</i>"?
-        </div>
-
-        <div class="add_banner hide">
-            <input type="text" id="add_value" placeholder="input contents for your keyword">
-            <button id="push">submit</button>
-            </div>
     </div>
-    <script src=lib/jquery-3.3.1.min.js></script>
-    <script src=lib/nebPay.js></script>
-    <script src=lib/bootstrap-4.0.0-dist/js/bootstrap.min.js></script>
-    <script src=lib/nebulas.js></script>
-    <script>
+    <div class="noExtension hide" id="noExtension">
+        NOTE: Please install <a target="_blank" href="https://github.com/ChengOrangeJu/WebExtensionWallet">WebExtensionWallet</a>  to use SUPER DICTIONARY
+    </div>
+    <div class="search">
+        <input id="search_value" type="text">
+        <button id=search>search</button>
+    </div>
 
-        "use strict";
+    <div class="result_success hide">
+        <div id=search_banner></div>
+        <p id=search_result> wait for content </p>
+        <div class="author">
+            <i><p> Author:</p> <p id=search_result_author> dasdajkajksdhjasdkjahdkjad</p></i>
+        </div>
+    </div>
+
+    <div class="result_faile hide">
+        Failed to find related information. Do you want to <button id="add">add</button> infromation for "<i id="result_faile_add">asd</i>"?
+    </div>
+
+    <div class="add_banner hide">
+        <input type="text" id="add_value" placeholder="input contents for your keyword">
+        <button id="push">submit</button>
+    </div>
+</div>
+<script src=lib/jquery-3.3.1.min.js></script>
+<script src=lib/nebPay.js></script>
+<script src=lib/bootstrap-4.0.0-dist/js/bootstrap.min.js></script>
+<script src=lib/nebulas.js></script>
+<script>
+
+    "use strict";
 
 
-        // $("#search_value").attr("disabled",true)
-        // $("#search").attr("disabled",true)
-        // //to check if the extension is installed
-        // //if the extension is installed, var "webExtensionWallet" will be injected in to web page
-        // if(typeof(webExtensionWallet) === "undefined"){
-        //     //alert ("Extension wallet is not installed, please install it first.")
-        //     $("#noExtension").removeClass("hide")
-        // }else{
-        //     $("#search_value").attr("disabled",false)
-        //     $("#search").attr("disabled",false)
-        // }
+    // $("#search_value").attr("disabled",true)
+    // $("#search").attr("disabled",true)
+    // //to check if the extension is installed
+    // //if the extension is installed, var "webExtensionWallet" will be injected in to web page
+    // if(typeof(webExtensionWallet) === "undefined"){
+    //     //alert ("Extension wallet is not installed, please install it first.")
+    //     $("#noExtension").removeClass("hide")
+    // }else{
+    //     $("#search_value").attr("disabled",false)
+    //     $("#search").attr("disabled",false)
+    // }
 
-        var dappAddress = "n1oXdmwuo5jJRExnZR5rbceMEyzRsPeALgm";
+    var dappAddress = "n1oXdmwuo5jJRExnZR5rbceMEyzRsPeALgm";
 
-        var nebulas = require("nebulas"),
-            Account = nebulas.Account,
-            neb = new nebulas.Neb();
-        neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));
+    var nebulas = require("nebulas"),
+        Account = nebulas.Account,
+        neb = new nebulas.Neb();
+    neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));
 
-        // 搜索功能: 查找Super-Dictionary 中有没有该词条
-        $("#search").click(function(){
-            // $("#search_value").val() 搜索框内的值
+    // 搜索功能: 查找Super-Dictionary 中有没有该词条
+    $("#search").click(function(){
+        // $("#search_value").val() 搜索框内的值
 
-            var from = Account.NewAccount().getAddressString();
+        var from = Account.NewAccount().getAddressString();
 
-            var value = "0";
-            var nonce = "0"
-            var gas_price = "1000000"
-            var gas_limit = "2000000"
-            var callFunction = "get";
-            var callArgs = "[\"" + $("#search_value").val() + "\"]"; //in the form of ["args"]
-            var contract = {
-                "function": callFunction,
-                "args": callArgs
-            }
+        var value = "0";
+        var nonce = "0"
+        var gas_price = "1000000"
+        var gas_limit = "2000000"
+        var callFunction = "get";
+        var callArgs = "[\"" + $("#search_value").val() + "\"]"; //in the form of ["args"]
+        var contract = {
+            "function": callFunction,
+            "args": callArgs
+        }
 
-            neb.api.call(from,dappAddress,value,nonce,gas_price,gas_limit,contract).then(function (resp) {
-                cbSearch(resp)
-            }).catch(function (err) {
-                //cbSearch(err)
-                console.log("error:" + err.message)
-            })
-
+        neb.api.call(from,dappAddress,value,nonce,gas_price,gas_limit,contract).then(function (resp) {
+            cbSearch(resp)
+        }).catch(function (err) {
+            //cbSearch(err)
+            console.log("error:" + err.message)
         })
+
+    })
 
     //return of search,
     function cbSearch(resp) {
@@ -312,7 +316,6 @@
     function cbPush(resp) {
         console.log("response of push: " + JSON.stringify(resp))
     }
-
 
 </script>
 </body>
