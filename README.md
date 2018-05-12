@@ -7,12 +7,12 @@ Super Dictionary is a Dapp deployed on Nebulas testnet.
 #### Smart contract
 The source code of Super Dictionary smart contract is [`smart_dictionary.js`](smartContract/smart_dictionary.js). And the contract address after deployed on testnet is `n1oXdmwuo5jJRExnZR5rbceMEyzRsPeALgm`.
 
-Super Dictionary is a simple smart contract stores and gets key/value  pairs. It has two functions for Dapp user to use: 
+Super Dictionary is a simple smart contract that stores and gets key/value  pairs. It has two functions for Dapp user to use: 
 * `save(key, value)` to create a entry(key/value pair) into Super Dictionary.
 * `get(key)` to search the value of a given key. If this entry doesn't exits, then you can create this entry.
 
 #### Web page of Dapp
-After the smart contract of our Dapp is deployed, we need to develop a web page for user to interact with it. The webpage of Super Dictionary is [`index.html`](http://39.105.36.104:8080/index.html). 
+After the smart contract of our Dapp is deployed, we need to develop a web page or App for user to interact with it. The webpage of Super Dictionary is [`index.html`](http://39.105.36.104:8080/index.html). 
 
 In Super Dictionary, we use [NebPay SDK](https://github.com/nebulasio/nebPay) as our payment interface, and Dapp user need to install chrome extension [WebExtensionWallet](https://github.com/ChengOrangeJu/WebExtensionWallet)(on PC) or [NAS Nano](https://blog.nebulas.io/2018/05/10/announcement-of-official-app/) wallet app(on mobile) to complete the transactions initiated by Dapp.
 
