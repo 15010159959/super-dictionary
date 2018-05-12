@@ -35,7 +35,7 @@ Video on Youtube:
 * [Nebulas Dapp Using NebPay SDK on mobile](https://www.youtube.com/watch?v=Cjlo9KKwlNE&index=1&list=PLjOT77mdhlRjYQy7KhsNOu7TUpqoBskBk)
 
 Video on bilibili:
-[如何在Dapp中使用NebPay SDK](https://www.bilibili.com/video/av23217213/?spm_id_from=333.23.home_video_list.1)
+* [如何在Dapp中使用NebPay SDK](https://www.bilibili.com/video/av23217213/?spm_id_from=333.23.home_video_list.1)
 
 
 
