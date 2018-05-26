@@ -230,40 +230,37 @@
         var result = resp.result    ////resp is an object, resp.result is a JSON string
         console.log("return of rpc call: " + JSON.stringify(result))
 
-        if (result === 'null'){
+        var resultString = JSON.stringify(result);
+        if(resultString.search("key") !== -1 && resultString.search("value") !== -1){
+            result = JSON.parse(result)
+            $(".add_banner").addClass("hide");
+            $(".result_faile").addClass("hide");
+
+            $("#search_banner").text($("#search_value").val())
+            $("#search_result").text(result.value)
+            $("#search_result_author").text(result.author)
+
+            $(".result_success").removeClass("hide");
+
+        }
+        if(resultString.search('"null"') !== -1){
             $(".add_banner").addClass("hide");
             $(".result_success").addClass("hide");
 
             $("#result_faile_add").text($("#search_value").val())
 
             $(".result_faile").removeClass("hide");
-        } else{
-            //if result is not null, then it should be "return value" or "error message"
-            try{
-                result = JSON.parse(result)
-            }catch (err){
-                //result is the error message
-            }
 
-            if (!!result.key){      //"return value"
-                $(".add_banner").addClass("hide");
-                $(".result_faile").addClass("hide");
+        }
+        if(resultString.search("error") !== -1){
+            $(".add_banner").addClass("hide");
+            $(".result_faile").addClass("hide");
 
-                $("#search_banner").text($("#search_value").val())
-                $("#search_result").text(result.value)
-                $("#search_result_author").text(result.author)
+            $("#search_banner").text($("#search_value").val())
+            $("#search_result").text(result)
+            $("#search_result_author").text("")
 
-                $(".result_success").removeClass("hide");
-            } else {        //"error message"
-                $(".add_banner").addClass("hide");
-                $(".result_faile").addClass("hide");
-
-                $("#search_banner").text($("#search_value").val())
-                $("#search_result").text(result)
-                $("#search_result_author").text("")
-
-                $(".result_success").removeClass("hide");
-            }
+            $(".result_success").removeClass("hide");
 
         }
 
@@ -280,33 +277,42 @@
     var NebPay = require("nebpay");     //https://github.com/nebulasio/nebPay
     var nebPay = new NebPay();
     var serialNumber
+    //var callbackUrl = NebPay.config.mainnetUrl;   //如果合约在主网,则使用这个
+    var callbackUrl = NebPay.config.testnetUrl;   //
 
     $("#push").click(function() {
 
         var to = dappAddress;
         var value = "0";
         var callFunction = "save"
-        var callArgs = "[\"" + $("#search_value").val() + "\",\"" + $("#add_value").val() + "\"]"
+        //var callArgs = "[\"" + $("#search_value").val() + "\",\"" + $("#add_value").val() + "\"]"
+        var arg1 = $("#search_value").val(),
+            arg2 = $("#add_value").val();
+        var callArgs = JSON.stringify([arg1, arg2]);
 
         serialNumber = nebPay.call(to, value, callFunction, callArgs, {    //使用nebpay的call接口去调用合约,
-            listener: cbPush        //设置listener, 处理交易返回信息
+            listener: cbPush,       //设置listener, 处理交易返回信息
+            callback: callbackUrl
         });
 
         intervalQuery = setInterval(function () {
             funcIntervalQuery();
-        }, 5000);
+        }, 10000);
     });
 
     var intervalQuery
 
     function funcIntervalQuery() {
-        nebPay.queryPayInfo(serialNumber)   //search transaction result from server (result upload to server by app)
+        var options = {
+            callback: callbackUrl
+        }
+        nebPay.queryPayInfo(serialNumber,options)   //search transaction result from server (result upload to server by app)
             .then(function (resp) {
                 console.log("tx result: " + resp)   //resp is a JSON string
                 var respObject = JSON.parse(resp)
                 if(respObject.code === 0){
-                    alert(`set ${$("#search_value").val()} succeed!`)
-                    clearInterval(intervalQuery)
+                    clearInterval(intervalQuery);
+                    alert(`set ${$("#search_value").val()} succeed!`);
                 }
             })
             .catch(function (err) {
@@ -316,6 +322,13 @@
 
     function cbPush(resp) {
         console.log("response of push: " + JSON.stringify(resp))
+        var respString = JSON.stringify(resp);
+        if(respString.search("rejected by user") !== -1){
+            clearInterval(intervalQuery)
+            alert(respString)
+        }else if(respString.search("txhash") !== -1){
+            //alert("wait for tx result: " + resp.txhash)
+        }
     }
 
 </script>
