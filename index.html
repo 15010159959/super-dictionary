@@ -210,7 +210,9 @@
         var gas_price = "1000000"
         var gas_limit = "2000000"
         var callFunction = "get";
-        var callArgs = "[\"" + $("#search_value").val() + "\"]"; //in the form of ["args"]
+        //var callArgs = "[\"" + $("#search_value").val() + "\"]"; //in the form of ["args"]
+        var arg = $("#search_value").val()
+        var callArgs = JSON.stringify([arg]);  //推荐用 JSON.stringify 来生成参数字符串,这样会避免出错!
         var contract = {
             "function": callFunction,
             "args": callArgs
