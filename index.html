@@ -283,6 +283,8 @@
     var callbackUrl = NebPay.config.testnetUrl;   //
 
     $("#push").click(function() {
+        clearInterval(intervalQuery);
+        console.log("clear intervalQuery=" + intervalQuery)
 
         var to = dappAddress;
         var value = "0";
@@ -298,8 +300,9 @@
         });
 
         intervalQuery = setInterval(function () {
+            console.log("querying intervalQuery=" + intervalQuery)
             funcIntervalQuery();
-        }, 10000);
+        }, 6000);
     });
 
     var intervalQuery
@@ -312,9 +315,15 @@
             .then(function (resp) {
                 console.log("tx result: " + resp)   //resp is a JSON string
                 var respObject = JSON.parse(resp)
-                if(respObject.code === 0){
+                if(respObject.code === 0 && respObject.data.status !== 2){
                     clearInterval(intervalQuery);
-                    alert(`set ${$("#search_value").val()} succeed!`);
+                    console.log("clear intervalQuery=" + intervalQuery)
+                    if(respObject.data.status === 1)
+                        alert(`Saving {${$("#search_value").val()} : ${$("#add_value").val()}}into super-dictionary successfully!`);
+                    else if(respObject.data.status === 0){
+                        alert(`Saving ${$("#search_value").val()} into super-dictionary failed!\n"${respObject.data.execute_error}"`);
+
+                    }
                 }
             })
             .catch(function (err) {
